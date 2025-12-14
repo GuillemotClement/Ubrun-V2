@@ -4,7 +4,7 @@ import { useState } from "react";
 import { navLink } from "./navLink";
 import type { NavLinkData } from "./types";
 
-export default function ComponentName() {
+export default function HeaderMenuResponsive() {
   const [isOpen, setIsOpen] = useState(false);
   const links = navLink;
 
