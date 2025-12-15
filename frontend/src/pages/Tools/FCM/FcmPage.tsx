@@ -16,7 +16,7 @@ import FormSubscribe from "../../../components/Form/FormSubscribe/FormSubscribe"
 const schema = z.object({
   age: z.coerce
     .number<string>()
-    .min(13, { error: "L'âge est requis et doit être > 0" })
+    .min(1, { error: "Un âge valide est attendus" })
     .max(120, { error: "Age invalide" }),
 });
 
