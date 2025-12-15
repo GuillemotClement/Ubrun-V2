@@ -8,177 +8,71 @@ i need to get age and sexe for the user. If user want second formule, i need to 
 TODO: get age with user data
 */
 import { useForm } from "@tanstack/react-form";
-import { useState } from "react";
 import { z } from "zod";
+import FormTitle from "../../../components/Form/FormTitle";
+import FormField from "../../../components/Form/FormField/FormField";
+import FormSubscribe from "../../../components/Form/FormSubscribe/FormSubscribe";
 
 const schema = z.object({
-  age: z.string().regex(/^\d*$/, "La valeur doit être un nombre"),
-  // fcMin: z.string().regex(/^\d*$/, "La valeur doit être un nombre").optional(),
-  sexe: z.enum(["man", "woman"], {
-    errorMap: () => ({ message: "Selectionner un sexe" }),
-  }),
+  age: z.coerce
+    .number<string>()
+    .min(13, { error: "L'âge est requis et doit être > 0" })
+    .max(120, { error: "Age invalide" }),
 });
 
-type formData = z.infer<typeof schema>;
+type FcmFormData = z.infer<typeof schema>;
 
-const getFcMinBasique = (age: number): number => {
-  const maxValue = 220;
-
-  return maxValue - age;
+const defaultValues = {
+  age: "" as string | number,
 };
 
 export default function FcmPage() {
-  const [result, setResult] = useState<number | null>(null);
-
-  const defaultValues = {
-    age: "",
-    // fcMin: "",
-  };
-
   const form = useForm({
     defaultValues,
-    validatorAdaptator: zodValidator(),
     validators: {
       onChange: schema,
     },
     onSubmit: ({ value }) => {
-      console.log(value);
-      const numericAge = Number(value.age);
-      const fcMax = getFcMinBasique(numericAge);
-      setResult(fcMax);
+      const data: FcmFormData = schema.parse(value);
+      console.log(data.age); // on obtient bien un number ici
     },
   });
 
   return (
-    <>
-      <p>FC Max = {result}</p>
-
+    <div className="container mx-auto py-10">
       <form
         onSubmit={(e) => {
           e.preventDefault();
           e.stopPropagation();
           form.handleSubmit();
         }}
-        className="w-80 md:w-150"
+        className="w-80 md:w-150 mx-auto border border-stone-300 rounded shadow p-4"
       >
-        <h2>Fréquence Cardique</h2>
+        <FormTitle title="Fréquence Cardique" />
 
-        <form.Field
-          name="age"
-          children={(field) => (
-            <div className="flex flex-col mb-4">
-              <label htmlFor={field.name} className="label mb-2 text-black">
-                Âge :
-              </label>
-              <input
-                type="number"
-                id={field.name}
-                name={field.name}
-                value={field.state.value}
-                onBlur={field.handleBlur}
-                onChange={(e) => field.handleChange(e.target.value)}
-                placeholder="100"
-                className="input w-full"
-              />
-            </div>
+        <form.Field name="age">
+          {(field) => (
+            <FormField
+              field={field}
+              isRequired={true}
+              label="Âge"
+              type="number"
+            />
           )}
-        />
-        {/*
-        <form.Field
-          name="fcMin"
-          children={(field) => (
-            <div className="flex flex-col mb-4">
-              <label htmlFor={field.name} className="label mb-2 text-black">
-                Fréquence cardique minimal :
-              </label>
-              <input
-                type="number"
-                id={field.name}
-                name={field.name}
-                value={field.state.value}
-                onBlur={field.handleBlur}
-                onChange={(e) => field.handleChange(e.target.value)}
-                placeholder="Fréquence cardiaque minimal"
-                className="input w-full"
-              />
-            </div>
-          )}
-        />*/}
-
-        <form.Field
-          name="sexe"
-          children={(field) => (
-            <div className="flex flex-col mb-4">
-              <label className="label mb-2 text-black">Sexe :</label>
-              <div className="flex gap-4">
-                {/* Radio Homme */}
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="radio"
-                    name={field.name}
-                    value="homme"
-                    checked={field.state.value === "homme"}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                    onBlur={field.handleBlur}
-                    className="w-4 h-4"
-                  />
-                  <span>Homme</span>
-                </label>
-
-                {/* Radio Femme */}
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="radio"
-                    name={field.name}
-                    value="femme"
-                    checked={field.state.value === "femme"}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                    onBlur={field.handleBlur}
-                    className="w-4 h-4"
-                  />
-                  <span>Femme</span>
-                </label>
-              </div>
-
-              {/* Afficher les erreurs */}
-              {field.state.meta.errors.length > 0 && (
-                <div className="text-red-500 text-sm mt-2">
-                  {field.state.meta.errors.join(", ")}
-                </div>
-              )}
-            </div>
-          )}
-        />
+        </form.Field>
 
         <form.Subscribe
           selector={(state) => [state.canSubmit, state.isSubmitting]}
-          children={([canSubmit, isSubmitting]) => (
-            <div className="flex justify-center gap-x-5">
-              <button
-                type="reset"
-                onClick={(e) => {
-                  e.preventDefault();
-                  setResult(null);
-                  setPurcent(null);
-                  setValue(null);
-                  form.reset();
-                }}
-                className="btn btn-neutral"
-              >
-                Effacer
-              </button>
-
-              <button
-                type="submit"
-                disabled={!canSubmit}
-                className="btn btn-primary"
-              >
-                {isSubmitting ? "..." : "Calculer"}
-              </button>
-            </div>
+        >
+          {([canSubmit, isSubmitting]) => (
+            <FormSubscribe
+              canSubmit={canSubmit}
+              isSubmitting={isSubmitting}
+              onReset={() => form.reset()}
+            />
           )}
-        />
+        </form.Subscribe>
       </form>
-    </>
+    </div>
   );
 }
