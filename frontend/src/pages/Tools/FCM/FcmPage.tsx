@@ -5,29 +5,30 @@ import FormField from "../../../components/Form/FormField/FormField";
 import FormSubscribe from "../../../components/Form/FormSubscribe/FormSubscribe";
 import { useState } from "react";
 import { fcmTools } from "../../../utils/fcmTools";
+import FcmTable from "./FcmTable";
 
 const schema = z.object({
   age: z.coerce
     .number()
     .min(1, "Un âge valide est attendus")
     .max(120, "Un âge valide est attendus"),
-  fcRepos: z.coerce
-    .number()
-    .min(1, "Une valeur de FC repos valid est attendus")
-    .max(250, "Une valeur de Fc min est attendu")
-    .optional(),
+  // fcRepos: z.coerce
+  //   .number()
+  //   .min(1, "Une valeur de FC repos valid est attendus")
+  //   .max(250, "Une valeur de Fc min est attendu")
+  //   .optional(),
 });
 
 type FcmFormData = z.infer<typeof schema>;
 
 const defaultValues: z.input<typeof schema> = {
   age: "",
-  fcRepos: "",
+  // fcRepos: "",
 };
 
 export default function FcmPage() {
   const [fcMax, setFcMax] = useState<number | string>("");
-  const [fcReserve, setFcReserve] = useState<number | string>("");
+  // const [fcReserve, setFcReserve] = useState<number | string>("");
 
   const form = useForm({
     defaultValues,
@@ -36,14 +37,15 @@ export default function FcmPage() {
     },
     onSubmit: ({ value }) => {
       const data: FcmFormData = schema.parse(value);
-      const fcRepo = data.fcRepos ?? null;
+      console.log(data);
+      // const fcRepo = data.fcRepos ?? null;
       const age = data.age;
       const fcMax = fcmTools.getFcMaxTheorique(age);
       setFcMax(fcMax);
-      if (fcRepo) {
-        setFcReserve(fcmTools.getFcReserve(age, fcRepo));
-      }
-      setFcmResult(fcMax);
+      // if (fcRepo) {
+      //   setFcReserve(fcmTools.getFcReserve(age, fcRepo));
+      // }
+      setFcMax(fcMax);
     },
   });
 
@@ -70,7 +72,7 @@ export default function FcmPage() {
           )}
         </form.Field>
 
-        <form.Field name="fcRepos">
+        {/*<form.Field name="fcRepos">
           {(field) => (
             <FormField
               field={field}
@@ -79,7 +81,7 @@ export default function FcmPage() {
               type="number"
             />
           )}
-        </form.Field>
+        </form.Field>*/}
 
         <form.Subscribe
           selector={(state) => [state.canSubmit, state.isSubmitting]}
@@ -99,7 +101,7 @@ export default function FcmPage() {
       </form>
 
       {fcMax && (
-        // TODO: on peut passer dans un nouveau composant la fcReserve et fcMax pour générer le tableau avec les valeur % de fc 
+        // TODO: on peut passer dans un nouveau composant la fcReserve et fcMax pour générer le tableau avec les valeur % de fc
         <div className="w-80 md:w-150 mx-auto p-4 mt-10">
           <div className="my-5 w-full">
             <label className="input w-full" htmlFor="fcmResult">
@@ -109,6 +111,8 @@ export default function FcmPage() {
           </div>
         </div>
       )}
+
+      <FcmTable fcMax={fcMax} />
     </div>
   );
 }
