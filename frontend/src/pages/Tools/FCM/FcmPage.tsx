@@ -8,21 +8,20 @@ import { useState } from "react";
 
 const schema = z.object({
   age: z.coerce
-    .number<string>()
-    .min(1, { error: "Un âge valide est attendus" })
-    .max(120, { error: "Age invalide" }),
+    .number()
+    .min(1, "Un âge valide est attendus")
+    .max(120, "Un âge valide est attendus"),
 });
 
 type FcmFormData = z.infer<typeof schema>;
 
-const defaultValues = {
-  age: "" as string | number,
+const defaultValues: z.input<typeof schema> = {
+  age: "",
 };
 
 export default function FcmPage() {
-  
   const [fcmResult, setFcmResult] = useState<number | string>("");
-  
+
   const form = useForm({
     defaultValues,
     validators: {
@@ -30,6 +29,7 @@ export default function FcmPage() {
     },
     onSubmit: ({ value }) => {
       const data: FcmFormData = schema.parse(value);
+      console.log("Age comme nombre:", data.age, typeof data.age);
       setFcmResult(getFCmax(data.age));
       // console.log(getFCmax(data.age));
     },
@@ -65,19 +65,34 @@ export default function FcmPage() {
             <FormSubscribe
               canSubmit={canSubmit}
               isSubmitting={isSubmitting}
-              onReset={() => form.reset()}
+              onReset={() => {
+                form.reset();
+                setFcmResult("");
+              }}
             />
           )}
         </form.Subscribe>
       </form>
-      
-      <div className="">
-        <div className="my-5 w-full">
-          <label className="input w-full" htmlFor="resultat">
-            <input type="number" value={fcmResult } />
-          </label>
+
+      {fcmResult && (
+        <div className="w-80 md:w-150 mx-auto p-4 mt-10">
+          <div className="my-5 w-full">
+            <label className="input w-full" htmlFor="fcmResult">
+              <span className="label">Fréquence Cardique Maximum</span>
+              <input type="string" id="fcmResult" value={fcmResult} />
+            </label>
+          </div>
         </div>
-      </div>
+      )}
+      
+      
+      
+      
+      
+      
+      
+      
+      
     </div>
   );
 }
