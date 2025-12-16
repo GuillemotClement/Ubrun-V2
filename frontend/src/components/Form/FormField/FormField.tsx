@@ -24,7 +24,7 @@ export default function FormField({
             <span className="text-red-500 font-bold text-xs">*</span>
           )}
         </span>
-        <FormInput field={field} type={type} />
+        <input type="number" />
       </label>
       <FormFieldInfo field={field} />
     </div>

@@ -1,17 +1,10 @@
-/*
-this use for calculate FCM for a user.
-
-User can choise if want the basique formule or the formulaire with fc repos.
-
-i need to get age and sexe for the user. If user want second formule, i need to know his fc repo
-
-TODO: get age with user data
-*/
 import { useForm } from "@tanstack/react-form";
 import { z } from "zod";
 import FormTitle from "../../../components/Form/FormTitle";
 import FormField from "../../../components/Form/FormField/FormField";
 import FormSubscribe from "../../../components/Form/FormSubscribe/FormSubscribe";
+import { getFCmax } from "../../../utils/fcmTools";
+import { useState } from "react";
 
 const schema = z.object({
   age: z.coerce
@@ -27,6 +20,9 @@ const defaultValues = {
 };
 
 export default function FcmPage() {
+  
+  const [fcmResult, setFcmResult] = useState<number | string>("");
+  
   const form = useForm({
     defaultValues,
     validators: {
@@ -34,7 +30,8 @@ export default function FcmPage() {
     },
     onSubmit: ({ value }) => {
       const data: FcmFormData = schema.parse(value);
-      console.log(data.age); // on obtient bien un number ici
+      setFcmResult(getFCmax(data.age));
+      // console.log(getFCmax(data.age));
     },
   });
 
@@ -73,6 +70,14 @@ export default function FcmPage() {
           )}
         </form.Subscribe>
       </form>
+      
+      <div className="">
+        <div className="my-5 w-full">
+          <label className="input w-full" htmlFor="resultat">
+            <input type="number" value={fcmResult } />
+          </label>
+        </div>
+      </div>
     </div>
   );
 }
