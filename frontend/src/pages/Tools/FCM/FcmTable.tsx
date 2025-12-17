@@ -5,10 +5,11 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { fcmTools } from "../../../utils/fcmTools";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 
 type FcmTableProps = {
   fcMax: number | string;
+  fcRepo: number;
 };
 
 type FcDataProps = {
@@ -29,12 +30,24 @@ const columns = [
   }),
 ];
 
-export default function FcmTable({ fcMax }: FcmTableProps) {
+export default function FcmTable({ fcMax, fcRepo }: FcmTableProps) {
   const numericFc = Number(fcMax);
-
+  const [zone, setZone] = useState<string>("1");
+  console.log(fcRepo);
   const data = useMemo(() => {
-    return fcmTools.generateFcTheoriqueData(numericFc);
-  }, [numericFc]);
+    const numericZone = Number(zone);
+    const fcData = [];
+
+    if (fcRepo > 0) {
+      return fcmTools.generateFcReserveValuePerZone(
+        numericZone,
+        numericFc,
+        fcRepo,
+      );
+    } else {
+      return fcmTools.generateFcValuePerZone(numericZone, numericFc);
+    }
+  }, [numericFc, zone]);
 
   const table = useReactTable({
     data,
@@ -43,7 +56,27 @@ export default function FcmTable({ fcMax }: FcmTableProps) {
   });
 
   return (
-    <div className="p-2">
+    <div className="p-2 flex flex-col items-center">
+      <div className="badge badge-success h-8 w-150 rounded-2xl shadow my-7">
+        <p className="text-xl">
+          Fréquence Cardique Max théorique: <span>{fcMax}</span>
+        </p>
+      </div>
+
+      <div>
+        <select
+          className="select"
+          value={zone}
+          onChange={(e) => setZone(e.target.value)}
+        >
+          <option value={1}>Zone 1 - Récupération</option>
+          <option value={2}>Zone 2 - Endurance</option>
+          <option value={3}>Zone 3 - Résistance douce</option>
+          <option value={4}>Zone 4 - Résistance dure</option>
+          <option value={5}>Zone 5 - Puissance</option>
+        </select>
+      </div>
+
       <table className="table w-100 mx-auto">
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (

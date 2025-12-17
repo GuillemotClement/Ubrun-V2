@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { z } from "zod";
 import { fcmTools } from "../../../utils/fcmTools";
 import { useForm } from "@tanstack/react-form";
@@ -11,25 +10,22 @@ const schema = z.object({
     .number()
     .min(1, "Un âge valide est attendus")
     .max(120, "Un âge valide est attendus"),
-  // fcRepos: z.coerce
-  //   .number()
-  //   .min(1, "Une valeur de FC repos valid est attendus")
-  //   .max(250, "Une valeur de Fc min est attendu")
-  //   .optional(),
+  fcRepo: z.coerce.number().optional(),
 });
 
 type FcmFormData = z.infer<typeof schema>;
 
 const defaultValues: z.input<typeof schema> = {
   age: "",
-  // fcRepos: "",
+  fcRepo: "",
 };
 
 type FcmFormProps = {
   setFcMax: (age: number) => void;
+  setFcRepo: (fcRepo: number) => void;
 };
 
-export default function FcmForm({ setFcMax }: FcmFormProps) {
+export default function FcmForm({ setFcMax, setFcRepo }: FcmFormProps) {
   const form = useForm({
     defaultValues,
     validators: {
@@ -38,7 +34,10 @@ export default function FcmForm({ setFcMax }: FcmFormProps) {
     onSubmit: ({ value }) => {
       const data: FcmFormData = schema.parse(value);
       const age = data.age;
+      const fcRepo = data.fcRepo ?? 0;
+      console.log("From form: ", fcRepo);
       setFcMax(fcmTools.getFcMaxTheorique(age));
+      setFcRepo(fcRepo);
     },
   });
 
@@ -59,6 +58,17 @@ export default function FcmForm({ setFcMax }: FcmFormProps) {
             field={field}
             isRequired={true}
             label="Âge"
+            type="number"
+          />
+        )}
+      </form.Field>
+
+      <form.Field name="fcRepo">
+        {(field) => (
+          <FormField
+            field={field}
+            isRequired={false}
+            label="Fréquence cardique au repos"
             type="number"
           />
         )}
