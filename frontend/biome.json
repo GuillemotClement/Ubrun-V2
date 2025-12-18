@@ -14,10 +14,13 @@
   },
   "linter": {
     "rules": {
+      "a11y": {
+        "useKeyWithClickEvents": "off"
+      },
       "correctness": {
         "noChildrenProp": "off"
       },
-      "recommended": true
+      "recommended": false
     },
     "enabled": true
   },

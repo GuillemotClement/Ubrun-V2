@@ -6,37 +6,33 @@ import FormTitle from "../../../components/Form/FormTitle";
 import { fcmTools } from "../../../utils/fcmTools";
 
 const schema = z.object({
-	fcMax: z.coerce
+	age: z.coerce
 		.number()
-		.min(1, "Une fréquence cardiaque maximal valide est attendus")
-		.max(250, "Une fréquence cardiaque valide est attendus"),
-	fcRepo: z.coerce.number().optional(),
+		.min(1, "Un âge valide est attendus")
+		.max(120, "Un âge valide est attendus"),
 });
 
-type FcmFormData = z.infer<typeof schema>;
+type AgeFormData = z.infer<typeof schema>;
 
 const defaultValues: z.input<typeof schema> = {
-	fcMax: "",
-	fcRepo: "",
+	age: "",
 };
 
-type FcmFormProps = {
+type AgeFormProps = {
 	setFcMax: (age: number) => void;
-	setFcRepo: (fcRepo: number) => void;
 };
 
-export default function FcmForm({ setFcMax, setFcRepo }: FcmFormProps) {
+export default function AgeFormProps({ setFcMax }: AgeFormProps) {
 	const form = useForm({
 		defaultValues,
 		validators: {
 			onChange: schema,
 		},
 		onSubmit: ({ value }) => {
-			const data: FcmFormData = schema.parse(value);
-			const fcRepo = data.fcRepo ?? 0;
-			const fcMax = data.fcMax;
+			const data: AgeFormData = schema.parse(value);
+			const age = data.age;
+            const fcMax = fcmTools.getFcMaxTheorique(age);
 			setFcMax(fcMax);
-			setFcRepo(fcRepo);
 		},
 	});
 
@@ -49,25 +45,14 @@ export default function FcmForm({ setFcMax, setFcRepo }: FcmFormProps) {
 				form.handleSubmit();
 			}}
 		>
-			<FormTitle title="Fréquence cardique maximal" />
+			<FormTitle title="Âge" />
 
-			<form.Field name="fcMax">
+			<form.Field name="age">
 				{(field) => (
 					<FormField
 						field={field}
 						isRequired={true}
-						label="Fréquence cardique maximal"
-						type="number"
-					/>
-				)}
-			</form.Field>
-
-			<form.Field name="fcRepo">
-				{(field) => (
-					<FormField
-						field={field}
-						isRequired={false}
-						label="Fréquence cardique au repos"
+						label="Âge"
 						type="number"
 					/>
 				)}

@@ -4,18 +4,18 @@ import HeaderMenuNavigation from "./HeaderMenuNavigation";
 import HeaderMenuResponsive from "./HeaderMenuResponsive";
 
 export default function Header() {
-  return (
-    <header className="navbar bg-base-100 shadow-sm">
-      <div className="navbar-start">
-        <HeaderMenuResponsive />
-        <HeaderLogo />
-      </div>
+	return (
+		<header className="navbar bg-base-100 shadow-sm">
+			<div className="navbar-start">
+				<HeaderMenuResponsive />
+				<HeaderLogo />
+			</div>
 
-      {/* menu navigation */}
-      <HeaderMenuNavigation />
+			{/* menu navigation */}
+			<HeaderMenuNavigation />
 
-      {/* menu action */}
-      <HeaderMenuAction />
-    </header>
-  );
+			{/* menu action */}
+			<HeaderMenuAction />
+		</header>
+	);
 }

@@ -1,41 +1,39 @@
+import { useState } from "react";
+import AgeForm from "./AgeForm";
 import FcmForm from "./FcmForm";
 import FcmTable from "./FcmTable";
-import { useState } from "react";
 
 export default function FcmPage() {
-  const [fcMax, setFcMax] = useState<number>(0);
-  const [fcRepo, setFcRepo] = useState<number>(0);
-  const [showFcForm, setShowFcForm] = useState<boolean>(false);
+	const [fcMax, setFcMax] = useState<number>(0);
+	const [fcRepo, setFcRepo] = useState<number>(0);
+	const [showAgeForm, setShowAgeForm] = useState<boolean>(false);
 
-  const toggleFormFc = () => {
-    setShowFcForm(!showFcForm);
-  };
+	const toggleAgeForm = () => {
+		setShowAgeForm(!showAgeForm);
+	};
 
-  return (
-    <div className="container mx-auto flex flex-col items-center">
-      <fieldset className="fieldset bg-base-100 border-base-300 rounded-box w-64 border p-4">
-        <label className="label" onClick={toggleFormFc}>
-          <input type="checkbox" className="checkbox" />
-          Je ne connais pas ma fréquence cardiaque maximal
-        </label>
-      </fieldset>
+	return (
+		<div className="container mx-auto flex flex-col items-center">
+			<button type="button" className="btn btn-neutral" onClick={toggleAgeForm}>
+				Je ne connais pas ma Fréquence cardique maximal
+			</button>
 
-      {showFcForm && (
-        <div className="card flex-1">
-          {/*Permet de fournir la FC max si user ne la connait*/}
-          <FcmForm setFcMax={setFcMax} setFcRepo={setFcRepo} />
-        </div>
-      )}
+			{showAgeForm ? (
+				<div className="card flex-1">
+					{/*Permet de fournir la FC max si user ne la connait*/}
+					<AgeForm setFcMax={setFcMax} />
+				</div>
+			) : (
+				<div className="card flex-1">
+					<FcmForm setFcMax={setFcMax} setFcRepo={setFcRepo} />
+				</div>
+			)}
 
-      <div className="card flex-1">
-        <FcmForm setFcMax={setFcMax} setFcRepo={setFcRepo} />
-      </div>
-
-      {fcMax > 0 && (
-        <div className="card flex-1">
-          <FcmTable fcMax={fcMax} fcRepo={fcRepo} />
-        </div>
-      )}
-    </div>
-  );
+			{fcMax > 0 && (
+				<div className="card flex-1">
+					<FcmTable fcMax={fcMax} fcRepo={fcRepo} />
+				</div>
+			)}
+		</div>
+	);
 }

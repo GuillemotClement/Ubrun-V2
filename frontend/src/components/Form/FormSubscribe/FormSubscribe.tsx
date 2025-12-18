@@ -1,23 +1,23 @@
 type FormSubscribeProps = {
-  canSubmit: boolean;
-  isSubmitting: boolean;
-  onReset: () => void;
+	canSubmit: boolean;
+	isSubmitting: boolean;
+	onReset: () => void;
 };
 
 export default function FormSubscribe({
-  canSubmit,
-  isSubmitting,
-  onReset,
+	canSubmit,
+	isSubmitting,
+	onReset,
 }: FormSubscribeProps) {
-  return (
-    <div className="flex justify-center gap-x-5">
-      <button type="reset" onClick={onReset} className="btn btn-neutral">
-        Effacer
-      </button>
+	return (
+		<div className="flex justify-center gap-x-5">
+			<button type="reset" onClick={onReset} className="btn btn-neutral">
+				Effacer
+			</button>
 
-      <button type="submit" disabled={!canSubmit} className="btn btn-primary">
-        {isSubmitting ? "..." : "Calculer"}
-      </button>
-    </div>
-  );
+			<button type="submit" disabled={!canSubmit} className="btn btn-primary">
+				{isSubmitting ? "..." : "Calculer"}
+			</button>
+		</div>
+	);
 }
