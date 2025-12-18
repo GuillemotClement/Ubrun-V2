@@ -15,7 +15,7 @@ export default function FcmPage() {
 	return (
 		<div className="container mx-auto flex flex-col items-center">
 			<button type="button" className="btn btn-neutral" onClick={toggleAgeForm}>
-				Je ne connais pas ma Fréquence cardique maximal
+				{showAgeForm ? "Je connais ma FCM" : "Je ne connais pas ma FCM"}
 			</button>
 
 			{showAgeForm ? (

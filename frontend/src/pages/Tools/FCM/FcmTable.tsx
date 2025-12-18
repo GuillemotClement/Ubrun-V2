@@ -56,20 +56,23 @@ export default function FcmTable({ fcMax, fcRepo }: FcmTableProps) {
 	});
 
 	return (
-		<div className="p-2 flex flex-col items-center">
-			<FcMaxTheorique fcMax={fcMax} />
-			<div>
-				<select
-					className="select"
-					value={zone}
-					onChange={(e) => setZone(e.target.value)}
-				>
-					<option value={1}>Zone 1 - Récupération</option>
-					<option value={2}>Zone 2 - Endurance</option>
-					<option value={3}>Zone 3 - Résistance douce</option>
-					<option value={4}>Zone 4 - Résistance dure</option>
-					<option value={5}>Zone 5 - Puissance</option>
-				</select>
+		<div className="p-2 flex flex-col">
+			<div className="">
+				<FcMaxTheorique fcMax={fcMax} />
+
+				<div className="my-5 w-full">
+					<select
+						className="select w-full shadow"
+						value={zone}
+						onChange={(e) => setZone(e.target.value)}
+					>
+						<option value={1}>Zone 1 - Récupération</option>
+						<option value={2}>Zone 2 - Endurance</option>
+						<option value={3}>Zone 3 - Résistance douce</option>
+						<option value={4}>Zone 4 - Résistance dure</option>
+						<option value={5}>Zone 5 - Puissance</option>
+					</select>
+				</div>
 			</div>
 
 			<table className="table w-100 mx-auto">
@@ -77,7 +80,7 @@ export default function FcmTable({ fcMax, fcRepo }: FcmTableProps) {
 					{table.getHeaderGroups().map((headerGroup) => (
 						<tr key={headerGroup.id}>
 							{headerGroup.headers.map((header) => (
-								<th key={header.id}>
+								<th key={header.id} className="text-center">
 									{header.isPlaceholder
 										? null
 										: flexRender(
@@ -93,7 +96,7 @@ export default function FcmTable({ fcMax, fcRepo }: FcmTableProps) {
 					{table.getRowModel().rows.map((row) => (
 						<tr key={row.id}>
 							{row.getVisibleCells().map((cell) => (
-								<td key={cell.id}>
+								<td key={cell.id} className="text-center">
 									{flexRender(cell.column.columnDef.cell, cell.getContext())}
 								</td>
 							))}
