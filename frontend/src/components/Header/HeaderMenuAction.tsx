@@ -53,10 +53,10 @@ export default function HeaderMenuAction() {
 			) : (
 				<ul>
 					<li>
-						<Link to="/" className="btn btn-neutral">
+						<Link to="/register" className="btn btn-neutral">
 							Inscription
 						</Link>
-						<Link to="/" className="btn btn-primary">
+						<Link to="/login" className="btn btn-primary">
 							Connexion
 						</Link>
 					</li>

@@ -7,6 +7,8 @@ import RootLayout from "../layouts/RootLayout";
 import Homepage from "../pages/Homepage";
 import FcmPage from "../pages/Tools/FCM/FcmPage";
 import ToolsPage from "../pages/Tools/ToolsPage";
+import LoginPage from "../pages/Auth/LoginPage";
+import RegisterPage from "../pages/Auth/RegisterPage";
 
 const rootRoute = createRootRoute({
 	component: () => <RootLayout />,
@@ -31,7 +33,20 @@ const fcmPage = createRoute({
 	component: () => <FcmPage />,
 });
 
-const routeTree = rootRoute.addChildren([indexRoute, toolsPage, fcmPage]);
+// Auth ======================================
+const loginPage = createRoute({
+	getParentRoute: () => rootRoute,
+	path: "/login",
+	component: () => <LoginPage />,
+});
+
+const registerPage = createRoute({
+	getParentRoute: () => rootRoute,
+	path: "/register",
+	component: () => <RegisterPage />
+})
+
+const routeTree = rootRoute.addChildren([indexRoute, toolsPage, fcmPage, loginPage, registerPage]);
 
 export const router = createRouter({
 	routeTree,
