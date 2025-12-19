@@ -1,6 +1,6 @@
 export const fcmTools = {
 	getFcMaxTheorique(age: number) {
-		return 208 - 0.7 * age;
+		return Math.round(208 - 0.7 * age);
 	},
 
 	getPurcentValueFcReserve(purcent: number, fcReserve: number, fcRepo: number) {

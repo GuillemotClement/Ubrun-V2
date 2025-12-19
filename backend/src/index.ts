@@ -13,7 +13,8 @@ const app = new Elysia()
     })
   )
   .get("/", () => "Hello Elysia")
-  .mount(auth.handler)
+  // .mount(auth.handler)
+  .all("/api/auth/*", ({ request }: { request: Request}) => auth.handler(request))
   .use(authRouter)
   .listen(3000);
 

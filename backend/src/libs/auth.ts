@@ -10,5 +10,9 @@ export const auth = betterAuth({
   }),
   emailAndPassword: {
     enabled: true,
-  }
+  },
+  trustedOrigins: [
+    "http://localhost:5173", // L'URL de ton front-end Vite
+    // "https://mon-app-prod.com" // Plus tard, ton URL de prod
+  ],
 });

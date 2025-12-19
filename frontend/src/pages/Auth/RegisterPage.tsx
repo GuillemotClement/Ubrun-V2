@@ -1,8 +1,10 @@
 import { useForm } from "@tanstack/react-form";
-import { z } from "zod"; 
+import { z } from "zod";
 import FormTitle from "../../components/Form/FormTitle";
 import FormField from "../../components/Form/FormField/FormField";
 import FormSubscribe from "../../components/Form/FormSubscribe/FormSubscribe";
+import { useMutation } from "@tanstack/react-query";
+import { authClient } from "../../libs/better-auth";
 
 const schema = z.object({
   email: z.email("Une email valide est attendu").trim(),
@@ -15,7 +17,7 @@ const schema = z.object({
 });
 
 type RegisterFormData = z.infer<typeof schema>;
-
+type RegisterApiPayload = Omit<RegisterFormData, "confirmPassword">;
 const defaultValues: z.input<typeof schema> = {
   email: "",
   name: "",
@@ -24,20 +26,43 @@ const defaultValues: z.input<typeof schema> = {
 }
 
 
-export default function RegisterPage(){
+
+
+export default function RegisterPage() {
+
+  const mutation = useMutation({
+    mutationFn: async (formData: RegisterApiPayload) => {
+      const { data, error } = await authClient.signUp.email(formData);
+
+      if (error) {
+        throw error;
+      }
+
+      return data;
+    },
+    onSuccess: (data) => {
+      console.log(data);
+    },
+    onError: (ctx) => {
+      console.error("Erreur serveur: ", ctx.message);
+    }
+  })
+
 
   const form = useForm({
     defaultValues,
     validators: {
       onChange: schema
     },
-    onSubmit: ({ value }) => (
-      console.log(value)
-    ),
+    onSubmit: ({ value }) => {
+      console.log(value);
+      const { confirmPassword, ...credentials } = value;
+      mutation.mutate(credentials);
+    },
   });
 
   return (
-    <form 
+    <form
       className="border"
       onSubmit={(e) => {
         e.preventDefault();
@@ -45,67 +70,67 @@ export default function RegisterPage(){
         form.handleSubmit();
       }}
     >
-      
-    <FormTitle title="Inscription"/>     
-      
-    <form.Field name="name">
-      {(field) => (
-        <FormField
-          field={field}
-          isRequired={true}
-          label="Nom"
-          type="text"
-        />
-      )}
-    </form.Field>
 
-    <form.Field name="email">
-      {(field) => (
-        <FormField
-          field={field}
-          isRequired={true}
-          label="Email"
-          type="email"
-        />
-      )}
-    </form.Field>
+      <FormTitle title="Inscription" />
 
-    <form.Field name="password">
-      {(field) => (
-        <FormField
-          field={field}
-          isRequired={true}
-          label="Mot de passe"
-          type="password"
-        />
-      )}
-    </form.Field>
+      <form.Field name="name">
+        {(field) => (
+          <FormField
+            field={field}
+            isRequired={true}
+            label="Nom"
+            type="text"
+          />
+        )}
+      </form.Field>
 
-    <form.Field name="confirmPassword">
-      {(field) => (
-        <FormField
-          field={field}
-          isRequired={true}
-          label="Confirmation du mot de passe"
-          type="password"
-        />
-      )}
-    </form.Field>
+      <form.Field name="email">
+        {(field) => (
+          <FormField
+            field={field}
+            isRequired={true}
+            label="Email"
+            type="email"
+          />
+        )}
+      </form.Field>
+
+      <form.Field name="password">
+        {(field) => (
+          <FormField
+            field={field}
+            isRequired={true}
+            label="Mot de passe"
+            type="password"
+          />
+        )}
+      </form.Field>
+
+      <form.Field name="confirmPassword">
+        {(field) => (
+          <FormField
+            field={field}
+            isRequired={true}
+            label="Confirmation du mot de passe"
+            type="password"
+          />
+        )}
+      </form.Field>
 
 
-    <form.Subscribe
-      selector={(state) => [state.canSubmit, state.isSubmitting]}
-    >
-      {([canSubmit, isSubmitting]) => (
-        <FormSubscribe
-          canSubmit={canSubmit}
-          isSubmitting={isSubmitting}
-          onReset={() => form.reset()}
-        />
-      )}
-    </form.Subscribe>
-    
-      
-       </form>
+      <form.Subscribe
+        selector={(state) => [state.canSubmit, state.isSubmitting]}
+      >
+        {([canSubmit, isSubmitting]) => (
+          <FormSubscribe
+            canSubmit={canSubmit}
+            isSubmitting={isSubmitting}
+            onReset={() => form.reset()}
+          />
+        )}
+      </form.Subscribe>
+
+
+    </form>
   )
 }
