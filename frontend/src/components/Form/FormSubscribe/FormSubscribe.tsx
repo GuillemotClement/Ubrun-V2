@@ -16,7 +16,7 @@ export default function FormSubscribe({
 			</button>
 
 			<button type="submit" disabled={!canSubmit} className="btn btn-primary">
-				{isSubmitting ? "..." : "Calculer"}
+				{isSubmitting ? "..." : "Soumettre"}
 			</button>
 		</div>
 	);

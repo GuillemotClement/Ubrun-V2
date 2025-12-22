@@ -6,6 +6,10 @@ export const navLink: NavLinkData[] = [
 		url: "/",
 	},
 	{
+		name: "Club",
+		url: "/clubs",
+	},
+	{
 		name: "Outils",
 		url: "/tools",
 	},

@@ -9,6 +9,7 @@ import FcmPage from "../pages/Tools/FCM/FcmPage";
 import ToolsPage from "../pages/Tools/ToolsPage";
 import LoginPage from "../pages/Auth/LoginPage";
 import RegisterPage from "../pages/Auth/RegisterPage";
+import ClubPage from "../pages/Club/ClubPage";
 
 const rootRoute = createRootRoute({
 	component: () => <RootLayout />,
@@ -43,10 +44,24 @@ const loginPage = createRoute({
 const registerPage = createRoute({
 	getParentRoute: () => rootRoute,
 	path: "/register",
-	component: () => <RegisterPage />
-})
+	component: () => <RegisterPage />,
+});
 
-const routeTree = rootRoute.addChildren([indexRoute, toolsPage, fcmPage, loginPage, registerPage]);
+// Club =========================================
+const clubPage = createRoute({
+	getParentRoute: () => rootRoute,
+	path: "/clubs",
+	component: () => <ClubPage />,
+});
+
+const routeTree = rootRoute.addChildren([
+	indexRoute,
+	toolsPage,
+	fcmPage,
+	loginPage,
+	registerPage,
+	clubPage,
+]);
 
 export const router = createRouter({
 	routeTree,

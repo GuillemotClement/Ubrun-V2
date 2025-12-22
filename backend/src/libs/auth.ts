@@ -4,15 +4,21 @@ import { db } from "../db";
 import * as schema from "../db/schema";
 
 export const auth = betterAuth({
-  database: drizzleAdapter(db, {
-    provider: "pg",
-    schema: schema
-  }),
-  emailAndPassword: {
-    enabled: true,
-  },
-  trustedOrigins: [
-    "http://localhost:5173", // L'URL de ton front-end Vite
-    // "https://mon-app-prod.com" // Plus tard, ton URL de prod
-  ],
+	database: drizzleAdapter(db, {
+		provider: "pg",
+		schema: schema,
+	}),
+	emailAndPassword: {
+		enabled: true,
+	},
+	trustedOrigins: [
+		"http://localhost:5173", // L'URL de ton front-end Vite
+		// "https://mon-app-prod.com" // Plus tard, ton URL de prod
+	],
+	advanced: {
+		defaultCookieAttributes: {
+			sameSite: "lax",
+			secure: false,
+		},
+	},
 });

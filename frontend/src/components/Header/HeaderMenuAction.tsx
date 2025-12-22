@@ -1,25 +1,31 @@
-import { Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { useMutation } from "@tanstack/react-query";
+import { Link, useNavigate } from "@tanstack/react-router";
+import { authClient } from "../../libs/better-auth";
 
 export default function HeaderMenuAction() {
-	// TEMP => for test
-	const [isAuth, setIsAuth] = useState<boolean>(false);
-	const toggleAuth = () => setIsAuth(!isAuth);
-	// =====================
+	const navigate = useNavigate();
+
+	const { data: session } = authClient.useSession();
+
+	const mutation = useMutation({
+		mutationFn: async () => {
+			const { error } = await authClient.signOut();
+
+			if (error) {
+				console.error(error);
+			}
+
+			navigate({ to: "/" });
+		},
+	});
+
+	const handleLogout = () => {
+		mutation.mutate();
+	};
 
 	return (
 		<div className="navbar-end">
-			{/* allow to switch display*/}
-			<button
-				type="button"
-				onClick={toggleAuth}
-				className="btn btn-xs btn-warning me-10"
-			>
-				auth
-			</button>
-			{/*==================================*/}
-
-			{isAuth ? (
+			{session ? (
 				<div className="dropdown dropdown-end">
 					<button
 						tabIndex={0}
@@ -46,16 +52,19 @@ export default function HeaderMenuAction() {
 							<Link to="/">Paramètres</Link>
 						</li>
 						<li>
-							<Link to="/">Deconnexion</Link>
+							{/** biome-ignore lint/a11y/useKeyWithClickEvents: <flemme> */}
+							<p onClick={handleLogout}>Deconnexion</p>
 						</li>
 					</ul>
 				</div>
 			) : (
-				<ul>
+				<ul className="flex gap-x-3">
 					<li>
 						<Link to="/register" className="btn btn-neutral">
 							Inscription
 						</Link>
+					</li>
+					<li>
 						<Link to="/login" className="btn btn-primary">
 							Connexion
 						</Link>
