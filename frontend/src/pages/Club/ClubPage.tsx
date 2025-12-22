@@ -1,3 +1,9 @@
+import ClubForm from "./ClubForm";
+
 export default function ClubPage() {
-	return <div>club page</div>;
+	return (
+		<div>
+			<ClubForm />
+		</div>
+	);
 }

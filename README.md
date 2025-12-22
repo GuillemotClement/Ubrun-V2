@@ -1,5 +1,5 @@
 # Ubrun-V2
-Application dédié à la course à pied
+Application dédiée à la course à pied
 
 --- 
 

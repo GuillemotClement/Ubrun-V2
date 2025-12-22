@@ -1,11 +1,11 @@
 import { useForm } from "@tanstack/react-form";
+import { useMutation } from "@tanstack/react-query";
+import { useNavigate } from "@tanstack/react-router";
 import { z } from "zod";
-import FormTitle from "../../components/Form/FormTitle";
 import FormField from "../../components/Form/FormField/FormField";
 import FormSubscribe from "../../components/Form/FormSubscribe/FormSubscribe";
-import { useMutation } from "@tanstack/react-query";
+import FormTitle from "../../components/Form/FormTitle";
 import { authClient } from "../../libs/better-auth";
-import { useNavigate } from "@tanstack/react-router";
 
 const schema = z
 	.object({
